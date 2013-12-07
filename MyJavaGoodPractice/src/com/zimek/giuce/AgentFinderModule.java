@@ -2,9 +2,11 @@ package com.zimek.giuce;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
+import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.RequestScoped;
-import com.google.inject.servlet.SessionScoped;
+import com.google.inject.servlet.ServletScopes;
 
 /**
  * Guice configuration class (module). Defines linked bindings with binding
@@ -23,11 +25,11 @@ public class AgentFinderModule extends AbstractModule {
 		bind(AgentFinder.class)
 		.annotatedWith(Names.named("primary"))
 		.to(WebServiceAgentFinder.class)
-		.in(SessionScoped.class); //another way of defining a scope of object to be injected
+		.in(Singleton.class); //another way of defining a scope of object to be injected
 		
 		//This binding can be done via AgentFinderProvider = implementation of Provider<T>
 		//or via provideAgentFinder() method like below = @Provides.
-		bind(AgentFinder.class).toProvider(AgentFinderProvider.class);
+		//bind(AgentFinder.class).toProvider(AgentFinderProvider.class);
 	}
 	
 	/**
@@ -36,7 +38,7 @@ public class AgentFinderModule extends AbstractModule {
 	 * 
 	 * @return
 	 */
-	@Provides @RequestScoped
+	@Provides //@RequestScoped
 	AgentFinder provideAgentFinder() {
 		SpreadsheetAgentFinder finder = new SpreadsheetAgentFinder();
 		finder.setType("Excel 97");
