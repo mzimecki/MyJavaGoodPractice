@@ -8,6 +8,10 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.zimek.concurrent.blocks.lock.Author;
 import com.zimek.concurrent.blocks.lock.Update;
 
+/**
+ * CoutndownLatches used here for setting order of updates (first thread t2).
+ *
+ */
 public class CopyOnWriteExampleMain {
 
   public static void main(String[] a) {
@@ -26,8 +30,7 @@ public class CopyOnWriteExampleMain {
 
     Thread t1 = new Thread() {
       public void run() {
-        l.add(ub.author(new Author("Jeffrey"))
-            .updateText("I like a lot of things").build());
+        l.add(ub.author(new Author("Jeffrey")).updateText("I like a lot of things").build());
         tl1.prep();
         firstLatch.countDown();
         try {
@@ -41,9 +44,10 @@ public class CopyOnWriteExampleMain {
     Thread t2 = new Thread() {
       public void run() {
         try {
-          firstLatch.await();
-          l.add(ub.author(new Author("Gavin")).updateText("I like otters")
-              .build());
+          firstLatch.await(); 	//at this point t1 added "Jeffrey" update to array and updated iterator
+          						//by calling prep() and released a latch. t2 can continue, adds Gavin update, 
+          						//updates iterator and prints timeline not waiting for t1 latch
+          l.add(ub.author(new Author("Gavin")).updateText("I like otters").build());
           tl2.prep();
           secondLatch.countDown();
         } catch (InterruptedException e) {

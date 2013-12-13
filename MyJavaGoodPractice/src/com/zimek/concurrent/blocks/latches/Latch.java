@@ -23,6 +23,13 @@ public class Latch extends Thread {
 	}
 
 	public void initialize() {
+		try {
+			//for eg. here will be quite long initialization
+			//using sleep to emulate
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		latch.countDown();
 	}
 
@@ -35,6 +42,7 @@ public class Latch extends Thread {
 		final CountDownLatch cdl = new CountDownLatch(quorum);
 
 		final Set<Latch> nodes = new HashSet<>();
+		System.out.println("Initializing threads...");
 		try {
 			for (int i = 0; i < MAX_THREADS; i++) {
 				Latch local = new Latch("localhost:" + (9000 + i), cdl);
@@ -42,6 +50,7 @@ public class Latch extends Thread {
 				local.start();
 			}
 			cdl.await();
+			System.out.println("Latches counted down! Now I can move further!");
 		} catch (InterruptedException e) {
 
 		} finally {

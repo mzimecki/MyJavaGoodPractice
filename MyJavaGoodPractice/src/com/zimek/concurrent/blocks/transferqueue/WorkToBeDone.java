@@ -7,8 +7,8 @@ public class WorkToBeDone {
 		this.name = aName;
 	}
 	
-	public void doWork() {
-		System.out.println("Doing work: " + name);
+	public void doWork(String workerName) {
+		System.out.println("Doing work: " + name + " by " + workerName);
 	}
 	
 	public String getName() {
