@@ -1,4 +1,4 @@
-package com.zimek.executors;
+package com.zimek.concurrent.executors;
 
 import java.util.ArrayList;
 import java.util.List;
